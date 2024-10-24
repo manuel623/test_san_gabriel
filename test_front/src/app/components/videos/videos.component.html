@@ -1,0 +1,121 @@
+<app-navbar></app-navbar>
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <h3>Gestión de Contenidos</h3>
+      <p>Sube, edita y configura la programación de videos.</p>
+      <button class="btn btn-outline-primary mx-2" *ngIf="!formUpdateVideos" (click)="toggleFormUpdateVideos()">
+        <i class="fa-solid fa-video" style="color: #74C0FC; padding-right: 3px;"></i>Subir Video</button>
+    </div>
+  </div>
+</div>
+
+<div class="container my-5 text-center" *ngIf="!formUpdateVideos">
+  <h3 class="text-center">Videos</h3>
+  <div class="justify-content-center d-flex mt-5" *ngIf="loadingTable">
+    <i class="fa-solid fa-spinner fa-spin fa-2xl"></i>
+  </div>
+  <table class="table table-striped" *ngIf="!loadingTable">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Tipo</th>
+        <th>Hora de Programación</th>
+        <th>Duración</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="dataVideo.length <= 0">
+        <td colspan="5" class="text-center">
+          No hay datos para mostrar
+        </td>
+      </tr>
+      <tr *ngFor="let item of dataVideo">
+        <td>{{ item.title }}</td>
+        <td>{{ getTypeVideo(item.type) }}</td>
+        <td>{{ (item.execution_time === null) ? 'Sin programación' : (convertToDate(item.execution_time) | date:
+          'HH:mm') }}</td>
+        <td>{{ formatDuration(item.duration) }}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-warning button" (click)="editViewVideo(item.id)">
+            <i class="fa-solid fa-pen-to-square" style="color: #FFD43B; padding-right: 3px;"></i>Editar</button>
+          <button class="btn btn-sm btn-outline-danger button" (click)="deleteVideo(item.id)">
+            <i class="fa-solid fa-delete-left fa-flip-vertical" style="color: #ff1100; padding-right: 3px;"></i>Eliminar</button>
+          <button class="btn btn-sm btn-outline-info button" (click)="schedule(item.id)">
+            <i class="fa-regular fa-calendar-days" style="color: #74C0FC; padding-right: 3px;"></i>{{ (item.execution_time === null) ? 'Programar' : 'Re-programar' }}</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="formUpdateVideos" class="d-flex justify-content-center align-items-center">
+  <form class="p-4 border rounded bg-light w-100" style="max-width: 90%; margin: 0 auto;"
+    [ngStyle]="{'max-width': '90%', 'width': '50%'}" (ngSubmit)="submitForm()">
+
+    <div class="mb-4">
+      <label for="contentType" class="form-label fs-4">Seleccionar Tipo de Contenido</label>
+      <select id="contentType" class="form-select form-select-lg" [(ngModel)]="selectedType" name="contentType" required
+        (change)="clearForm()">
+        <option value="" disabled selected>Elige un tipo de contenido</option>
+        <option value="VT">Video con Título</option>
+        <option value="VBL">Video con Banner Lateral</option>
+        <option value="BT">Banner con Título</option>
+      </select>
+    </div>
+
+    <div *ngIf="selectedType === 'VT'">
+      <div class="mb-4">
+        <label for="titleVT" class="form-label">Título</label>
+        <input type="text" id="titleVT" class="form-control" [(ngModel)]="formData.title" name="titleVT" required>
+      </div>
+      <div class="mb-4">
+        <label for="videoVT" class="form-label">Cargar Video</label>
+        <input type="file" id="videoVT" class="form-control" accept="video/*" (change)="onFileChange($event, 'video')"
+          required>
+        <div *ngIf="fileError" class="text-danger">{{ fileError }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedType === 'VBL'">
+      <div class="mb-4">
+        <label for="titleVT" class="form-label">Título</label>
+        <input type="text" id="titleVT" class="form-control" [(ngModel)]="formData.title" name="titleVT" required>
+      </div>
+      <div class="mb-4">
+        <label for="videoVBL" class="form-label">Cargar Video</label>
+        <input type="file" id="videoVBL" class="form-control" accept="video/*" (change)="onFileChange($event, 'video')"
+          required>
+        <div *ngIf="fileError" class="text-danger">{{ fileError }}</div>
+      </div>
+      <div class="mb-4">
+        <label for="bannerVBL" class="form-label">Cargar Banner Lateral</label>
+        <input type="file" id="bannerVBL" class="form-control" accept="image/*"
+          (change)="onFileChange($event, 'banner')" required>
+        <div *ngIf="fileError" class="text-danger">{{ fileError }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedType === 'BT'">
+      <div class="mb-4">
+        <label for="titleBT" class="form-label">Título</label>
+        <input type="text" id="titleBT" class="form-control" [(ngModel)]="formData.title" name="titleBT" required>
+      </div>
+      <div class="mb-4">
+        <label for="bannerBT" class="form-label">Cargar Banner</label>
+        <input type="file" id="bannerBT" class="form-control" accept="image/*" (change)="onFileChange($event, 'banner')"
+          required>
+        <div *ngIf="fileError" class="text-danger">{{ fileError }}</div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-secondary btn-lg" (click)="toggleFormUpdateVideos()"
+        [disabled]="createVideoButton">Volver</button>
+      <button type="submit" class="btn btn-primary btn-lg"
+        [disabled]="!isValidForm() || createVideoButton">Guardar</button>
+    </div>
+  </form>
+
+</div>

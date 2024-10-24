@@ -1,0 +1,49 @@
+<div class="justify-content-center d-flex mt-5" *ngIf="loading">
+    <i class="fa-solid fa-spinner fa-spin fa-2xl"></i>
+</div>
+<div *ngIf="!loading">
+    <div *ngIf="dataVideo.length <= 0">
+        <span>No hay videos para mostrar</span>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-success" (click)="login()"><i class="fa-solid fa-right-to-bracket"></i> Iniciar
+            Sesión</button>
+    </div>
+    <div class="container-fluid" *ngIf="dataVideo.length > 0">
+        <div *ngIf="dataVideo[currentVideoIndex].type === 'VBL'" class="row align-items-center text-center">
+            <div class="col-12 mt-3">
+                <h1 class="display-4 custom-title mb-3 pb-3">{{ dataVideo[currentVideoIndex].title }}</h1>
+            </div>
+            <div class="col-md-5 banner-VBL">
+                <img [src]="environment.apiStorage + dataVideo[currentVideoIndex].banner_image" class="banner-image"
+                    alt="Banner">
+            </div>
+            <div class="col-md-7 video-container-VBL">
+                <video #videoPlayer class="custom-video" autoplay (ended)="nextVideo()">
+                    <source [src]="environment.apiStorage + dataVideo[currentVideoIndex].video_path" type="video/mp4">
+                    Tu navegador no soporta la etiqueta de video.
+                </video>
+            </div>
+        </div>
+        <div *ngIf="dataVideo[currentVideoIndex].type === 'BT'" class="row align-items-center text-center">
+            <div class="col-12 mt-3">
+                <h1 class="display-4 custom-title mb-3 pb-3">{{ dataVideo[currentVideoIndex].title }}</h1>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <img [src]="environment.apiStorage + dataVideo[currentVideoIndex].banner_image" class="banner-image"
+                    alt="Banner">
+            </div>
+        </div>
+        <div *ngIf="dataVideo[currentVideoIndex].type === 'VT'" class="row text-center align-items-center">
+            <div class="col-12 mt-3">
+                <h1 class="display-4 custom-title mb-3 pb-3">{{ dataVideo[currentVideoIndex].title }}</h1>
+            </div>
+            <div class="col-12 video-container">
+                <video #videoPlayer class="custom-video" autoplay (ended)="nextVideo()">
+                    <source [src]="environment.apiStorage + dataVideo[currentVideoIndex].video_path" type="video/mp4">
+                    Tu navegador no soporta la etiqueta de video.
+                </video>
+            </div>
+        </div>
+    </div>
+</div>
