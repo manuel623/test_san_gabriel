@@ -35,6 +35,19 @@ Asegúrate de que el puerto y las credenciales de conexión sean correctas en el
 Verifica el archivo .env para asegurarse de que la configuración de la base de datos esté correcta. Especialmente.
 Revisa que el puerto de la base de datos coincida con el que estás utilizando en tu entorno local
 
+-Si por alguna razón da este error:
+Personal access client not found. Please create one.
+
+Significa que la llave para iniciar sesión del cliente no se creo correctamente, siga estos pasos:
+
+1. php artisan passport:client --personal
+
+
+al seguir los pasos que ahí se muestran debe colocar esto en el .env 
+(Recordar que es un ejemplo y que en Client1 y 2 debe colocar lo que arroje la consola):
+CLIENT_1=1
+CLIENT_2=PM4l50aDdFewB3AJnkSpMIByOz1BwqftXVRSUxZc
+
 ---
 
 ## Instrucciones para el frontend
