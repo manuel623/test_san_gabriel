@@ -56,4 +56,9 @@ CLIENT_2=PM4l50aDdFewB3AJnkSpMIByOz1BwqftXVRSUxZc
 2. Ejecutar `npm install` para instalar dependencias
 3. Ejecutar `npm start` para levantar el servidor
 
+## IMPORTANTE
+
+Si llega a presentar fallas en la reproducción al iniciar y/o recargar la pagina
+Se recomienda hacer clic (interactuar) sobre la pagina antes de cargar un video y/o banner, debido a seguridad que presentan los navegadores
+
 
